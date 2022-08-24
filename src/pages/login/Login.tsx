@@ -1,16 +1,25 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
 import { Form } from '@unform/web';
+
+import { IUserLoginData, useAuth } from '../../shared/contexts/AuthContext';
 import { VTextField } from '../../shared/forms/VTextField';
 
-
 export const Login: React.FC = () => {
+    const navigate = useNavigate();
+    const { signIn } = useAuth();
 
+    const handleSubmit = useCallback(
+        async ({ email, password }: IUserLoginData) => {
+            await signIn({ email, password });
 
+            navigate('/dashboard');
+        }, []);
 
     return (
         <Box height='100vh' display='flex' flexDirection='column' gap={1} overflow='hidden' >
             <Box
-                bgcolor={'#322F3D'}
                 display='flex'
                 flexDirection='column'
                 padding={2}
@@ -30,9 +39,8 @@ export const Login: React.FC = () => {
                     gap={4}
                     justifyContent='center'
                 >
-
                     <Typography variant='h5'> Login</Typography>
-                    <Form onSubmit={console.log} >
+                    <Form onSubmit={handleSubmit} >
                         <Box display='flex' flexDirection='column' gap={2}>
                             <VTextField
                                 variant='outlined'
@@ -49,8 +57,6 @@ export const Login: React.FC = () => {
                             <Button variant='contained' type='submit' fullWidth>Entrar</Button>
                         </Box>
                     </Form>
-
-
                 </Box>
             </Box >
         </Box >
