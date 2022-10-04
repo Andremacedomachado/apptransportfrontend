@@ -9,7 +9,7 @@ export const AppRoutes = () => {
     return (
         <Routes>
             <Route path='/' element={<Login></Login>}></Route>
-            <Route element={<PrivateRoute role='funcionario'></PrivateRoute>}>
+            <Route element={<PrivateRoute roleRequirement='funcionario'></PrivateRoute>}>
                 <Route path='/dashboard' element={<Dashboard />}></Route>
             </Route>
         </Routes>

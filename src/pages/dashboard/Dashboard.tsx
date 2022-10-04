@@ -3,26 +3,41 @@ import { Box, List, ListItem, Typography, ListItemButton, Paper, Button } from '
 import { useEffect, useState } from 'react';
 
 import api from '../../services/api/Api';
+import { useUserInfo } from '../../shared/contexts/UserInfoContext';
 
-interface IUserRolesData {
-    roles: string[];
+
+interface IRoleResponse {
+    roleId: string,
+    name: string,
+    createdAt?: Date,
+    updatedAt?: Date,
+}
+interface IRolesResponse {
+    roles: IRoleResponse[],
+    count: number
 }
 
+interface IUserRolesData {
+    roles: string[]
+}
 
 export const Dashboard = () => {
-    const [perm, setPerm] = useState<IUserRolesData>({} as IUserRolesData);
+    const { user } = useUserInfo();
+    const [perm, setPerm] = useState<string[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         setIsLoading(true);
         async function loadRoles() {
-            await api.get('/users/roles')
+            await api.get(`/users/roles/${user.id}`)
                 .then((result) => {
                     if (result.data instanceof Error) {
                         alert('error ao listar roles');
                     }
                     else {
                         setIsLoading(false);
-                        setPerm(result.data);
+                        const dados: IRolesResponse = { roles: result.data.roles, count: result.data.count };
+
+                        setPerm(dados.roles.map(role => role.name));
                     }
                 });
         }
@@ -68,21 +83,21 @@ export const Dashboard = () => {
                             <Typography variant='h6'> Lista de permissoes</Typography>
 
                         </Box>
-                        {!isLoading &&
-                            <List>
-                                {perm.roles.map((cargo, index) => {
-                                    return (
-                                        <ListItem key={index}>
-                                            <ListItemButton>
-                                                <Button variant='contained' fullWidth>
-                                                    {cargo.toUpperCase()}
-                                                </Button>
-                                            </ListItemButton>
+                        {!isLoading && (<List>
+                            {perm?.map((role, index = 0) => {
+                                return (
+                                    <ListItem key={index}>
+                                        <ListItemButton>
+                                            <Button variant='contained' fullWidth>
+                                                {role.toUpperCase()}
+                                            </Button>
+                                        </ListItemButton>
 
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>)
+
                         }
                     </Box>
                 </Box>

@@ -1,10 +1,13 @@
 import { AppRoutes } from './routes';
 import { AuThProvider } from './shared/contexts/AuthContext';
+import { UserInfoProvider } from './shared/contexts/UserInfoContext';
 
 function App() {
     return (
         <AuThProvider>
-            <AppRoutes />
+            <UserInfoProvider>
+                <AppRoutes />
+            </UserInfoProvider>
         </AuThProvider>
     );
 }

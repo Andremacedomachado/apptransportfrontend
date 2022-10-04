@@ -5,15 +5,17 @@ import { Form } from '@unform/web';
 
 import { IUserLoginData, useAuth } from '../../shared/contexts/AuthContext';
 import { VTextField } from '../../shared/forms/VTextField';
+import { useUserInfo } from '../../shared/contexts/UserInfoContext';
 
 export const Login: React.FC = () => {
     const navigate = useNavigate();
     const { signIn } = useAuth();
+    const { registerUserCurrent } = useUserInfo();
 
     const handleSubmit = useCallback(
         async ({ email, password }: IUserLoginData) => {
             await signIn({ email, password });
-
+            await registerUserCurrent(email);
             navigate('/dashboard');
         }, []);
 
