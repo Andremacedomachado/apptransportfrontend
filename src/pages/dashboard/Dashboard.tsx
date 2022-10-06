@@ -1,6 +1,7 @@
 
-import { Box, List, ListItem, Typography, ListItemButton, Paper, Button } from '@mui/material';
+import { Box, List, ListItem, Typography, ListItemButton, Paper, Button, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import api from '../../services/api/Api';
 import { useUserInfo } from '../../shared/contexts/UserInfoContext';
@@ -22,6 +23,8 @@ interface IUserRolesData {
 }
 
 export const Dashboard = () => {
+    const theme = useTheme();
+    const navigate = useNavigate();
     const { user } = useUserInfo();
     const [perm, setPerm] = useState<string[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +47,10 @@ export const Dashboard = () => {
         loadRoles();
     }, []);
 
+    const selectWorkEnviroment = (role: string) => {
+        navigate(`/${role}`, { replace: false });
+    };
+
 
     return (
         <Box height='100vh' display='flex' flexDirection='column' gap={1} overflow='hidden'>
@@ -54,22 +61,22 @@ export const Dashboard = () => {
                 alignItems='center'
                 justifyContent='center'
                 flex={1}
+                bgcolor={theme.palette.background.default}
             >
                 <Box
                     variant='outlined'
                     component={Paper}
                     width='50%'
                     height='70%'
-                    bgcolor={'#4B5D67'}
                     display='flex'
                     flexDirection='column'
                     padding={2}
                     gap={4}
+                    sx={{ boxShadow: 3 }}
                 >
                     <Box
                         variant='outlined'
                         component={Paper}
-                        bgcolor={'#1B2430'}
                         display='flex'
                         flexDirection='column'
                         padding={2}
@@ -88,7 +95,12 @@ export const Dashboard = () => {
                                 return (
                                     <ListItem key={index}>
                                         <ListItemButton>
-                                            <Button variant='contained' fullWidth>
+                                            <Button
+                                                variant='contained'
+                                                fullWidth
+                                                onClick={_ => selectWorkEnviroment(role)}
+                                                color='secondary'
+                                            >
                                                 {role.toUpperCase()}
                                             </Button>
                                         </ListItemButton>

@@ -32,9 +32,9 @@ export const Login: React.FC = () => {
                 <Box
                     variant='outlined'
                     component={Paper}
+                    sx={{ boxShadow: 3 }}
                     width='30%'
                     height='70%'
-                    bgcolor={'#4B5D67'}
                     display='flex'
                     flexDirection='column'
                     padding={2}
